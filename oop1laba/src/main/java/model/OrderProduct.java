@@ -1,10 +1,11 @@
 package model;
 
 public class OrderProduct {
-    private Product product;
+    private CatalogItem product; // Заменили тип
     private int quantity;
 
-    public OrderProduct(Product product, int quantity) {
+    // В конструкторе тоже меняем тип
+    public OrderProduct(CatalogItem product, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Количество должно быть больше 0");
         }
@@ -16,7 +17,7 @@ public class OrderProduct {
         return product.getPrice() * quantity;
     }
 
-    public Product getProduct() { return product; }
+    public CatalogItem getProduct() { return product; } // Заменили тип
     public int getQuantity() { return quantity; }
 
     @Override

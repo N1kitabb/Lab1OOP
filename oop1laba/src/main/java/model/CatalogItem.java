@@ -1,10 +1,10 @@
 package model;
 
-public class Product {
+public class CatalogItem {
     private String name;
     private double price;
 
-    public Product(String name, double price) {
+    public CatalogItem(String name, double price) {
         this.name = name;
         this.price = price;
     }

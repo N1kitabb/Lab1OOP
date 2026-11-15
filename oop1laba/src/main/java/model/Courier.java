@@ -10,7 +10,9 @@ public class Courier {
         this.phoneNumber = phoneNumber;
         this.isFree = true;
     }
-
+    public void setFree(boolean free) {
+        this.isFree = free;
+    }
     public String getName() { return name; }
     public String getPhoneNumber() { return phoneNumber; }
     public boolean isFree() { return isFree; }
