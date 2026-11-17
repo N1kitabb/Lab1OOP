@@ -17,16 +17,11 @@ public class OrderService {
         availableDeliveries.add(new PickupDelivery());
     }
 
-    public void addCourier(Courier courier) {
-        couriers.add(courier);
-    }
+    public void addCourier(Courier courier) { couriers.add(courier); }
+    public void saveOrder(Order order) { orders.add(order); }
 
     public List<Courier> getCouriers() { return couriers; }
     public Catalog getCatalog() { return catalog; }
     public List<DeliveryType> getAvailableDeliveries() { return availableDeliveries; }
     public List<Order> getOrders() { return orders; }
-
-    public void saveOrder(Order order) {
-        orders.add(order);
-    }
 }

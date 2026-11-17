@@ -4,7 +4,7 @@ public class MainMenu {
     private final ConsoleInput input;
     private Client client;
     private final OrderService orderService;
-    private final OrderUI orderUI;
+    private final OrderConsoleUI orderUI;
 
     public MainMenu(ConsoleInput input) {
         this.input = input;
@@ -14,7 +14,7 @@ public class MainMenu {
         this.orderService = new OrderService(catalog);
 
         // Создаем UI и передаем ему сервис
-        this.orderUI = new OrderUI(input, orderService);
+        this.orderUI = new OrderConsoleUI(input, orderService);
     }
 
     public void printMainMenu() {
@@ -35,25 +35,16 @@ public class MainMenu {
                 case 1 -> createCourier();
                 case 2 -> createClient();
                 case 3 -> {
-                    if (client != null) {
-                        orderUI.createOrder(client); // Делегируем UI
-                    } else {
-                        System.out.println("Сначала создайте клиента!");
-                    }
+                    if (client != null) orderUI.createOrder(client);
                 }
                 case 4 -> {
-                    if (client != null) {
-                        orderUI.showOrderHistory(); // Делегируем UI
-                    } else {
-                        System.out.println("Сначала создайте клиента!");
-                    }
+                    if (client != null) orderUI.showOrderHistory();
                 }
                 case 0 -> System.out.println("Выход...");
                 default -> System.out.println("Неверная команда.");
             }
         }
     }
-
     private void createClient() {
         String name = input.readString("Имя: ");
         String phone = input.readPhone("Телефон: ");

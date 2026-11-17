@@ -1,14 +1,15 @@
 package model;
 
-public class OrderUI {
+public class OrderConsoleUI {
     private final ConsoleInput input;
     private final OrderService orderService;
 
-    public OrderUI(ConsoleInput input, OrderService orderService) {
+    public OrderConsoleUI(ConsoleInput input, OrderService orderService) {
         this.input = input;
         this.orderService = orderService;
     }
 
+    // ВОТ ОН, ПРОПАВШИЙ МЕТОД
     public void createOrder(Client client) {
         Order order = new Order(client);
         int choice = -1;
@@ -49,15 +50,54 @@ public class OrderUI {
     }
 
     public void showOrderHistory() {
-        if (orderService.getOrders().isEmpty()) {
+        var orders = orderService.getOrders();
+        if (orders.isEmpty()) {
             System.out.println("\nИстория заказов пуста.");
             return;
         }
 
         System.out.println("\n--- История заказов ---");
-        for (Order o : orderService.getOrders()) {
-            System.out.println(o.toString());
-            System.out.println("----------------------");
+        for (int i = 0; i < orders.size(); i++) {
+            Order o = orders.get(i);
+            System.out.println((i + 1) + ". Заказ №" + o.getId() + " | Статус: " + o.getStatus().getDescription() + " | Сумма: " + o.getItemsTotal() + " руб.");
+        }
+        System.out.println("0. Назад в главное меню");
+
+        int choice = input.readInt("Выберите заказ для просмотра или смены статуса: ");
+
+        if (choice > 0 && choice <= orders.size()) {
+            Order selectedOrder = orders.get(choice - 1);
+            viewSingleOrder(selectedOrder);
+        }
+    }
+
+    private void viewSingleOrder(Order order) {
+        int choice = -1;
+        while (choice != 0) {
+            System.out.println("\n=== Детали заказа №" + order.getId() + " ===");
+            System.out.println(order.toString());
+            System.out.println("=================================");
+
+            if (order.getStatus() != OrderStatus.DELIVERED) {
+                System.out.println("1. Перевести на следующий статус");
+            } else {
+                System.out.println("(Заказ уже доставлен, статус изменить нельзя)");
+            }
+            System.out.println("0. Назад к списку заказов");
+
+            choice = input.readInt("> ");
+
+            if (choice == 1 && order.getStatus() != OrderStatus.DELIVERED) {
+                order.nextStatus();
+                System.out.println("Статус изменен на: " + order.getStatus().getDescription());
+                if (order.getStatus() == OrderStatus.DELIVERED) {
+                    System.out.println("Заказ доставлен! Курьер освобожден.");
+                }
+            } else if (choice == 0) {
+                System.out.println("Возврат к списку...");
+            } else {
+                System.out.println("Неверная команда.");
+            }
         }
     }
 

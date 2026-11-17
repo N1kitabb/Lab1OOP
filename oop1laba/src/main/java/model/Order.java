@@ -8,7 +8,8 @@ public class Order {
     private int id;
     private Client client;
     private List<OrderProduct> items;
-    private String status;
+
+    private OrderStatus status; // Теперь это enum
     private DeliveryType deliveryType;
     private Courier courier;
 
@@ -16,7 +17,7 @@ public class Order {
         this.id = nextId++;
         this.client = client;
         this.items = new ArrayList<>();
-        this.status = "Новый";
+        this.status = OrderStatus.CREATED; // Изначально "Создан"
     }
 
     public void addItem(OrderProduct item) {
@@ -38,14 +39,25 @@ public class Order {
         }
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    // Логика перехода статусов
+    public void nextStatus() {
+        switch (status) {
+            case CREATED -> status = OrderStatus.COOKING;
+            case COOKING -> status = OrderStatus.DELIVERING;
+            case DELIVERING -> {
+                status = OrderStatus.DELIVERED;
+                if (courier != null) {
+                    courier.setFree(true); // Освобождаем курьера
+                }
+            }
+            case DELIVERED -> System.out.println("Заказ уже доставлен, дальше некуда.");
+        }
     }
 
     public int getId() { return id; }
     public Client getClient() { return client; }
     public List<OrderProduct> getItems() { return items; }
-    public String getStatus() { return status; }
+    public OrderStatus getStatus() { return status; }
     public DeliveryType getDeliveryType() { return deliveryType; }
     public Courier getCourier() { return courier; }
 
@@ -69,7 +81,8 @@ public class Order {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Заказ №").append(id).append(" для ").append(client.getName()).append("\n");
-        sb.append("Статус: ").append(status).append("\n");
+        // Выводим русское описание статуса
+        sb.append("Статус: ").append(status.getDescription()).append("\n");
         sb.append("--- Позиции ---\n");
         for (OrderProduct item : items) {
             sb.append(item.toString()).append("\n");
