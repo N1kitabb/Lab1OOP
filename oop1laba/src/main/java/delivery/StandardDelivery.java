@@ -1,4 +1,4 @@
-package model;
+package delivery;
 
 public class StandardDelivery implements DeliveryType {
     @Override public String getName() { return "Стандартная доставка"; }

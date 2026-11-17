@@ -1,5 +1,7 @@
 package model;
 
+import delivery.DeliveryType;
+
 import java.util.ArrayList;
 import java.util.List;
 

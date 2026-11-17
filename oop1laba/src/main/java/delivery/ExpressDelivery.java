@@ -1,4 +1,4 @@
-package model;
+package delivery;
 
 public class ExpressDelivery implements DeliveryType {
     @Override public String getName() { return "Экспресс-доставка"; }

@@ -1,4 +1,4 @@
-package model;
+package delivery;
 
 public interface DeliveryType {
     String getName();

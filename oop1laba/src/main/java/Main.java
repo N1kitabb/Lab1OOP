@@ -1,4 +1,5 @@
-package model;
+import ui.ConsoleInput;
+import ui.MainMenu;
 
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;

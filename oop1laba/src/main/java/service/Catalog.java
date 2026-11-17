@@ -1,4 +1,6 @@
-package model;
+package service;
+
+import model.CatalogItem;
 
 import java.util.ArrayList;
 import java.util.List;

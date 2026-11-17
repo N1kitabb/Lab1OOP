@@ -1,4 +1,9 @@
-package model;
+package ui;
+
+import model.Client;
+import model.Courier;
+import service.Catalog;
+import service.OrderService;
 
 public class MainMenu {
     private final ConsoleInput input;

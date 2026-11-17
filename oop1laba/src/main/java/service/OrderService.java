@@ -1,4 +1,11 @@
-package model;
+package service;
+
+import delivery.DeliveryType;
+import delivery.ExpressDelivery;
+import delivery.PickupDelivery;
+import delivery.StandardDelivery;
+import model.Courier;
+import model.Order;
 
 import java.util.ArrayList;
 import java.util.List;
