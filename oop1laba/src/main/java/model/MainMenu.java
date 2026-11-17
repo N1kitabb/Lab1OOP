@@ -4,11 +4,17 @@ public class MainMenu {
     private final ConsoleInput input;
     private Client client;
     private final OrderService orderService;
+    private final OrderUI orderUI;
 
     public MainMenu(ConsoleInput input) {
         this.input = input;
         Catalog catalog = new Catalog();
-        this.orderService = new OrderService(input, catalog);
+
+        // Создаем сервис (он ничего не знает о консоли)
+        this.orderService = new OrderService(catalog);
+
+        // Создаем UI и передаем ему сервис
+        this.orderUI = new OrderUI(input, orderService);
     }
 
     public void printMainMenu() {
@@ -30,14 +36,14 @@ public class MainMenu {
                 case 2 -> createClient();
                 case 3 -> {
                     if (client != null) {
-                        orderService.createOrder(client); // Вызываем создание
+                        orderUI.createOrder(client); // Делегируем UI
                     } else {
                         System.out.println("Сначала создайте клиента!");
                     }
                 }
                 case 4 -> {
                     if (client != null) {
-                        orderService.showOrderHistory(); // Вызываем историю
+                        orderUI.showOrderHistory(); // Делегируем UI
                     } else {
                         System.out.println("Сначала создайте клиента!");
                     }
