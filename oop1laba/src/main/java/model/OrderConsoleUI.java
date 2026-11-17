@@ -9,7 +9,6 @@ public class OrderConsoleUI {
         this.orderService = orderService;
     }
 
-    // ВОТ ОН, ПРОПАВШИЙ МЕТОД
     public void createOrder(Client client) {
         Order order = new Order(client);
         int choice = -1;
@@ -33,6 +32,10 @@ public class OrderConsoleUI {
                 case 4 -> {
                     if (order.getItems().isEmpty()) {
                         System.out.println("Нельзя оформить пустой заказ! Добавьте товары.");
+                    } else if (order.getDeliveryType() == null) {
+                        System.out.println("Выберите способ доставки перед завершением!");
+                    } else if (order.getDeliveryType().requiresCourier() && order.getCourier() == null) {
+                        System.out.println("Назначьте курьера перед завершением!");
                     } else {
                         orderService.saveOrder(order);
                         System.out.println("\nЗаказ №" + order.getId() + " успешно оформлен!");
@@ -42,6 +45,7 @@ public class OrderConsoleUI {
                 }
                 case 0 -> {
                     System.out.println("Создание заказа отменено.");
+                    order.cancel();
                     choice = 0;
                 }
                 default -> System.out.println("Неверная команда.");
@@ -88,10 +92,12 @@ public class OrderConsoleUI {
             choice = input.readInt("> ");
 
             if (choice == 1 && order.getStatus() != OrderStatus.DELIVERED) {
-                order.nextStatus();
-                System.out.println("Статус изменен на: " + order.getStatus().getDescription());
-                if (order.getStatus() == OrderStatus.DELIVERED) {
-                    System.out.println("Заказ доставлен! Курьер освобожден.");
+                if (order.canMoveToNextStatus()) {
+                    order.nextStatus();
+                    System.out.println("Статус изменен на: " + order.getStatus().getDescription());
+                    if (order.getStatus() == OrderStatus.DELIVERED) {
+                        System.out.println("Заказ завершен! Курьер освобожден.");
+                    }
                 }
             } else if (choice == 0) {
                 System.out.println("Возврат к списку...");
@@ -107,7 +113,13 @@ public class OrderConsoleUI {
         if (choice > 0) {
             CatalogItem p = orderService.getCatalog().getProduct(choice);
             if (p != null) {
-                int qty = input.readInt("Количество: ");
+                int qty = 0;
+                while (qty <= 0) {
+                    qty = input.readInt("Количество (должно быть > 0): ");
+                    if (qty <= 0) {
+                        System.out.println("Ошибка: количество должно быть больше нуля!");
+                    }
+                }
                 order.addItem(new OrderProduct(p, qty));
                 System.out.println("Товар добавлен!");
             } else {
