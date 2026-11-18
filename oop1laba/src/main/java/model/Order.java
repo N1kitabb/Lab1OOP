@@ -1,10 +1,8 @@
 package model;
 
-import delivery.DeliveryType;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import delivery.DeliveryType;
 public class Order {
     private static int nextId = 1;
     private int id;
@@ -50,14 +48,41 @@ public class Order {
     }
 
     public void cancel() {
+        if (this.status == OrderStatus.DELIVERED) {
+            System.out.println("Ошибка: заказ уже доставлен. Используйте возврат.");
+            return;
+        }
+        if (this.status == OrderStatus.CANCELLED || this.status == OrderStatus.RETURNED) {
+            System.out.println("Ошибка: заказ уже отменен или возвращен.");
+            return;
+        }
+
         if (this.courier != null) {
             this.courier.setFree(true);
             this.courier = null;
         }
-        this.status = OrderStatus.CREATED;
+        this.status = OrderStatus.CANCELLED;
+        System.out.println("Заказ №" + id + " отменен.");
+    }
+
+    public void returnOrder() {
+        if (this.status != OrderStatus.DELIVERED) {
+            System.out.println("Ошибка: вернуть можно только доставленный заказ.");
+            return;
+        }
+
+        if (this.courier != null) {
+            this.courier.setFree(true);
+            this.courier = null;
+        }
+        this.status = OrderStatus.RETURNED;
+        System.out.println("Заказ №" + id + " возвращен.");
     }
 
     public boolean canMoveToNextStatus() {
+        if (status == OrderStatus.CANCELLED || status == OrderStatus.RETURNED || status == OrderStatus.DELIVERED) {
+            return false;
+        }
         if (items.isEmpty()) return false;
         if (deliveryType == null) {
             System.out.println("Ошибка: не выбран способ доставки.");
@@ -71,6 +96,11 @@ public class Order {
     }
 
     public void nextStatus() {
+        if (status == OrderStatus.CANCELLED || status == OrderStatus.RETURNED) {
+            System.out.println("Ошибка: заказ отменен или возвращен, смена статуса невозможна.");
+            return;
+        }
+
         switch (status) {
             case CREATED -> status = OrderStatus.COOKING;
             case COOKING -> {

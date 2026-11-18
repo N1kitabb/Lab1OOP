@@ -1,8 +1,12 @@
-package ui;
+package ui; // Обратите внимание на пакет
 
-import delivery.DeliveryType;
-import model.*;
+import model.CatalogItem;
+import model.Courier;
+import model.Order;
+import model.OrderProduct;
+import model.OrderStatus;
 import service.OrderService;
+import delivery.DeliveryType;
 
 public class OrderConsoleUI {
     private final ConsoleInput input;
@@ -13,7 +17,7 @@ public class OrderConsoleUI {
         this.orderService = orderService;
     }
 
-    public void createOrder(Client client) {
+    public void createOrder(model.Client client) {
         Order order = new Order(client);
         int choice = -1;
 
@@ -86,26 +90,40 @@ public class OrderConsoleUI {
             System.out.println(order.toString());
             System.out.println("=================================");
 
-            if (order.getStatus() != OrderStatus.DELIVERED) {
-                System.out.println("1. Перевести на следующий статус");
-            } else {
-                System.out.println("(Заказ уже доставлен, статус изменить нельзя)");
-            }
-            System.out.println("0. Назад к списку заказов");
+            if (order.getStatus() == OrderStatus.DELIVERED) {
+                System.out.println("1. Оформить возврат");
+                System.out.println("0. Назад к списку заказов");
 
-            choice = input.readInt("> ");
-
-            if (choice == 1 && order.getStatus() != OrderStatus.DELIVERED) {
-                if (order.canMoveToNextStatus()) {
-                    order.nextStatus();
-                    System.out.println("Статус изменен на: " + order.getStatus().getDescription());
-                    if (order.getStatus() == OrderStatus.DELIVERED) {
-                        System.out.println("Заказ завершен! Курьер освобожден.");
-                    }
+                choice = input.readInt("> ");
+                if (choice == 1) {
+                    order.returnOrder();
                 }
-            } else if (choice == 0) {
-                System.out.println("Возврат к списку...");
+
+            } else if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.RETURNED) {
+                System.out.println("(Заказ отменен или возвращен. Действия недоступны)");
+                System.out.println("0. Назад к списку заказов");
+                choice = input.readInt("> ");
+
             } else {
+                System.out.println("1. Перевести на следующий статус");
+                System.out.println("2. Отменить заказ");
+                System.out.println("0. Назад к списку заказов");
+
+                choice = input.readInt("> ");
+
+                if (choice == 1) {
+                    if (order.canMoveToNextStatus()) {
+                        order.nextStatus();
+                        System.out.println("Статус изменен на: " + order.getStatus().getDescription());
+                    }
+                } else if (choice == 2) {
+                    order.cancel();
+                }
+            }
+
+            if (choice == 0) {
+                System.out.println("Возврат к списку...");
+            } else if (choice != 1 && choice != 2) {
                 System.out.println("Неверная команда.");
             }
         }

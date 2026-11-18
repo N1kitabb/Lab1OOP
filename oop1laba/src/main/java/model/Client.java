@@ -12,8 +12,6 @@ public class Client {
     }
 
     public String getName() { return name; }
-    public String getPhone() { return phoneNumber; }
-    public String getAddress() { return address; }
 
     @Override
     public String toString() {

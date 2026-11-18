@@ -4,7 +4,9 @@ public enum OrderStatus {
     CREATED("Создан"),
     COOKING("Готовится"),
     DELIVERING("Везем"),
-    DELIVERED("Доставлен");
+    DELIVERED("Доставлен"),
+    CANCELLED("Отменен"),
+    RETURNED("Возврат");
 
     private final String description;
 

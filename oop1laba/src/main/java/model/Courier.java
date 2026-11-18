@@ -14,7 +14,6 @@ public class Courier {
         this.isFree = free;
     }
     public String getName() { return name; }
-    public String getPhoneNumber() { return phoneNumber; }
     public boolean isFree() { return isFree; }
 
     @Override
