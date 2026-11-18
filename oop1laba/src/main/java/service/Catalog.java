@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Catalog {
-    private final List<CatalogItem> items = new ArrayList<>(); // Заменили List<Product> на List<CatalogItem>
+    private final List<CatalogItem> items = new ArrayList<>();
 
     public Catalog() {
-        // И здесь создаем CatalogItem вместо Product
         items.add(new CatalogItem("Пицца", 550.0));
         items.add(new CatalogItem("Бургер", 300.0));
         items.add(new CatalogItem("Картошка фри", 150.0));
@@ -23,7 +22,7 @@ public class Catalog {
         }
     }
 
-    public CatalogItem getProduct(int index) { // Заменили возвращаемый тип
+    public CatalogItem getProduct(int index) {
         if (index > 0 && index <= items.size()) {
             return items.get(index - 1);
         }
