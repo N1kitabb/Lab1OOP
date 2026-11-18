@@ -119,7 +119,7 @@ public class OrderConsoleUI {
             if (p != null) {
                 int qty = 0;
                 while (qty <= 0) {
-                    qty = input.readInt("Количество (должно быть > 0): ");
+                    qty = input.readInt("Количество: ");
                     if (qty <= 0) {
                         System.out.println("Ошибка: количество должно быть больше нуля!");
                     }
